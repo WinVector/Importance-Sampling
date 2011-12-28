@@ -35,9 +35,6 @@ public final class LogNormal implements RandomVariable {
 	public void setExpectation(final double v, final double sigma) {		
 		this.sigma = Math.max(0.0,sigma);
 		u = Math.log(v) - this.sigma*this.sigma/2.0;
-		if(Double.isNaN(u)) {
-			System.out.println("break");
-		}
 	}
 	
 	@Override

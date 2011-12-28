@@ -179,6 +179,7 @@ public final class DefaultExample {
 		final double[] count = new double[problemDimension];
 		final NumberFormat nf = new DecimalFormat("#.##");
 		for(int step=0;step<10;++step) {
+			System.out.println("****************");
 			for(int j=0;j<problemDimension;++j) {
 				System.out.print(" , " + nf.format(r[j].expectation()));
 			}
@@ -195,21 +196,32 @@ public final class DefaultExample {
 			}
 			Arrays.sort(samples);
 			Arrays.fill(count,0.0);
-			double totalwt = 0.0;
+			double observationCount = 0.0;
+			double nHadDefault = 0;
 			for(int i=0;i<improvementSampleSize;++i) {
-				final double si = samples[i].score;
-				if(si>1) {
+				if(samples[i].score>0) {
+					nHadDefault += 1;
+					final double si = samples[i].score;
 					final double logwtU = logwt(p,samples[i].x);
 					final double logwtP = logwt(r,samples[i].x);
 					final double wt = si*Math.exp(logwtU-logwtP);
-					totalwt += wt;  // can also set wt to 1 if we are only interested in optimization
+					observationCount += si;
 					for(int j=0;j<problemDimension;++j) {
 						count[j] += wt*samples[i].x[j];
 					}
 				}
 			}
+			final double pHadDefault = nHadDefault/(double)improvementSampleSize;
+			System.out.println("\t" + pHadDefault + " fraction of samples saw a default");
 			for(int j=0;j<problemDimension;++j) {
-				r[j].setExpectation(count[j]/totalwt);
+				final double oldExpectation = r[j].expectation();
+				final double newExpectation = count[j]/observationCount;
+				System.out.print(" , " + nf.format(newExpectation));
+				r[j].setExpectation(0.9*oldExpectation + 0.1*newExpectation);
+			}
+			System.out.println();
+			if(pHadDefault>=0.25) {
+				break;
 			}
 		}
 		
