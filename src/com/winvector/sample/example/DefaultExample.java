@@ -132,7 +132,7 @@ public final class DefaultExample {
 					+ sep + "NumberOfSamples"
 					+ sep + "DefaultRateEstimate"
 					+ sep + "ProbAtLeastOneDefault"
-					+ sep + "ExepctedNumberDefaultsGivenAtLeastOne"
+					+ sep + "ExpectedNumberDefaultsGivenAtLeastOne"
 					+ sep + "ProportonOfSampleWithADefault";
 		}
 		
@@ -225,9 +225,7 @@ public final class DefaultExample {
 			}
 		}
 		
-		// get std estimate of default rate
 		System.out.println(SampleRes.header());
-		System.out.println(workStdSample(rand, p, 1000000).row("Large"));
 		for(int rep=0;rep<nExpmt;++rep) {
 			System.out.println(workStdSample(rand, p,estimateSampleSize).row("Standard"));
 		}
@@ -250,6 +248,9 @@ public final class DefaultExample {
 				}
 			}
 			System.out.println(s.row("ImportanceSample"));
+		}
+		for(int rep=0;rep<5;++rep) { 		// get std estimate of default rate
+			System.out.println(workStdSample(rand, p, 10000000).row("Large"));
 		}
 	}
 
